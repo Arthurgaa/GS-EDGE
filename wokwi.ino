@@ -3,15 +3,13 @@
 #include <PubSubClient.h>
 #include <DHT.h>
 
-// Configurações da rede WiFi do Wokwi
+// Configurações da rede WiFi
 const char* ssid = "Wokwi-GUEST"; // Nome da rede WiFi
 const char* password = "";        // Wi-Fi do Wokwi não requer senha
 
 // Configuração do broker MQTT
 const char* mqtt_server = "4774fc7629144bce88648f900411e8bb.s1.eu.hivemq.cloud";
 const int mqtt_port = 8883; // Porta para conexões TLS
-
-// Credenciais MQTT (substitua pelos seus dados do HiveMQ Cloud)
 const char* mqtt_user = "hivemq.webclient.1731952553915";
 const char* mqtt_password = "uBgCe1K,0#7aj@9A.PLr";
 
@@ -84,45 +82,65 @@ void loop() {
   temperatura = dht.readTemperature();
   umidade = dht.readHumidity();
 
-  // Ler dados do sensor LDR e converter para porcentagem
+  // Ler dados do sensor LDR
   int valorLDR = analogRead(LDRPIN);
-  luminosidade = map(valorLDR, 0, 4095, 0, 100); // Convertendo para escala de 0 a 100%
+  luminosidade = map(valorLDR, 0, 4095, 0, 100);
 
-  // Verificar se os valores são válidos
   if (!isnan(temperatura) && !isnan(umidade)) {
-    // Publicar dados normais
+    // Publicar dados
     char tempString[8], humString[8], lumString[8];
     dtostrf(temperatura, 1, 2, tempString);
     dtostrf(umidade, 1, 2, humString);
     sprintf(lumString, "%d", luminosidade);
-    client.publish("renovavel/temperatura", tempString);
-    client.publish("renovavel/umidade", humString);
-    client.publish("renovavel/luminosidade", lumString);
+
+    Serial.print("Publicando temperatura: ");
+    Serial.println(tempString);
+    if (!client.publish("renovavel/temperatura", tempString)) {
+      Serial.println("Erro ao publicar temperatura.");
+    }
+
+    Serial.print("Publicando umidade: ");
+    Serial.println(humString);
+    if (!client.publish("renovavel/umidade", humString)) {
+      Serial.println("Erro ao publicar umidade.");
+    }
+
+    Serial.print("Publicando luminosidade: ");
+    Serial.println(lumString);
+    if (!client.publish("renovavel/luminosidade", lumString)) {
+      Serial.println("Erro ao publicar luminosidade.");
+    }
 
     // Lógica de alertas para situações críticas
     if (temperatura > 45.0) {
       client.publish("alertas/energia", "Temperatura alta crítica detectada!");
+      Serial.println("Alerta: Temperatura alta crítica detectada!");
       digitalWrite(LEDPIN, HIGH);
     } else if (temperatura < 0.0) {
       client.publish("alertas/energia", "Temperatura baixa crítica detectada!");
+      Serial.println("Alerta: Temperatura baixa crítica detectada!");
       digitalWrite(LEDPIN, HIGH);
     } else if (umidade > 85.0) {
       client.publish("alertas/energia", "Umidade alta crítica detectada!");
+      Serial.println("Alerta: Umidade alta crítica detectada!");
       digitalWrite(LEDPIN, HIGH);
     } else if (umidade < 20.0) {
       client.publish("alertas/energia", "Umidade baixa crítica detectada!");
+      Serial.println("Alerta: Umidade baixa crítica detectada!");
       digitalWrite(LEDPIN, HIGH);
     } else if (luminosidade < 20) {
       client.publish("alertas/energia", "Condição de luz extremamente baixa!");
+      Serial.println("Alerta: Condição de luz extremamente baixa!");
       digitalWrite(LEDPIN, HIGH);
     } else if (luminosidade > 90) {
       client.publish("alertas/energia", "Condição de luz excessivamente alta!");
+      Serial.println("Alerta: Condição de luz excessivamente alta!");
       digitalWrite(LEDPIN, HIGH);
     } else {
       digitalWrite(LEDPIN, LOW); // Sem alerta
     }
   } else {
-    Serial.println("Falha ao ler os dados do DHT22!");
+    Serial.println("Erro ao ler os dados do DHT22.");
   }
 
   delay(5000); // Intervalo entre leituras
