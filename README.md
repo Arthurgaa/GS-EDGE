@@ -1,4 +1,4 @@
-# Dashboard para Monitoramento de Sistema Renovável
+# Monitoramento de Sistema Renovável
 
 ## Descrição
 
