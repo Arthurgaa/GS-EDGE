@@ -61,6 +61,13 @@ Esse sistema de monitoramento é altamente relevante para a área de **energia r
    - Recebe os dados via MQTT.
    - Exibe gráficos de temperatura, umidade, luminosidade e eficiência.
    - Exibe alertas em tempo real sobre condições críticas.
+
+## Projeto Simulado no Wokwi
+
+Você pode visualizar a simulação do projeto de monitoramento do sistema renovável no [Wokwi](https://wokwi.com/projects/414916502118856705). A simulação inclui o código do ESP32 interagindo com os sensores de temperatura, umidade e luminosidade, além do envio dos dados para o broker MQTT.
+
+Acesse o link para ver a configuração do hardware e o comportamento em tempo real dos sensores, como se fosse o ambiente real de operação.
+
   
 ## Integrantes
 
