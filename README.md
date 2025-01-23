@@ -16,6 +16,8 @@ Esse sistema de monitoramento é altamente relevante para a área de **energia r
 
 - **Monitoramento em Tempo Real**: O uso de um **dashboard visual** permite ao usuário ter uma visão clara dos dados e identificar problemas rapidamente. A emissão de **alertas automáticos** ajuda a identificar condições críticas, como temperaturas excessivas ou falta de luz, que podem afetar a produção de energia, possibilitando uma resposta rápida.
 
+## Arquitetura
+![alt text](wokwi-img.png)
 
 ## Tecnologias Utilizadas
 
